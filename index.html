@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Curbside Care — Trash Bin Concierge in Gainesville, TX</title>
+  <meta name="description" content="Curbside Care moves your bins to the curb, cleans them after pickup, and returns them where they belong. Residential trash-bin concierge service in Gainesville, Texas. $20/month." />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="apple-touch-icon" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --teal: #1F806D;
+      --teal-dark: #155C50;
+      --teal-deep: #0F4339;
+      --mint: #E3F4EE;
+      --mint-soft: #F0FAF6;
+      --citrus: #F3A35B;
+      --coral: #F2785C;
+      --ink: #17332F;
+      --muted: #5C7A74;
+      --paper: #FBFDFC;
+      --white: #FFFFFF;
+      --line: #DDE9E4;
+      --shadow: 0 18px 40px -18px rgba(23, 51, 47, 0.35);
+      --shadow-sm: 0 8px 24px -12px rgba(23, 51, 47, 0.3);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { width: min(1080px, 92vw); margin: 0 auto; }
+
+    /* ===== Nav ===== */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(251, 253, 252, 0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { width: 42px; height: 42px; }
+    .brand b { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--ink); }
+    .brand span { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; color: var(--teal); text-transform: uppercase; }
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-links a { font-size: 15px; font-weight: 600; color: var(--muted); transition: color .2s; }
+    .nav-links a:hover { color: var(--teal-dark); }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      font-weight: 700; font-size: 15px; padding: 13px 24px; border-radius: 999px;
+      cursor: pointer; border: none; transition: transform .15s ease, box-shadow .2s ease, background .2s;
+      white-space: nowrap;
+    }
+    .btn-primary { background: var(--teal); color: #fff; box-shadow: 0 10px 24px -10px rgba(31,128,109,0.7); }
+    .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); }
+    .btn-coral { background: linear-gradient(135deg, var(--citrus), var(--coral)); color: #fff; box-shadow: 0 12px 28px -10px rgba(242,120,92,0.6); }
+    .btn-coral:hover { transform: translateY(-2px); }
+    .btn-ghost { background: var(--white); color: var(--teal-dark); border: 1.5px solid var(--line); }
+    .btn-ghost:hover { border-color: var(--teal); }
+    .nav .btn { padding: 10px 20px; }
+
+    /* ===== Hero ===== */
+    .hero { position: relative; overflow: hidden; padding: 72px 0 88px; background: radial-gradient(1200px 500px at 80% -10%, var(--mint) 0%, transparent 60%), linear-gradient(180deg, var(--mint-soft), var(--paper)); }
+    .hero::after {
+      content: ""; position: absolute; right: -120px; top: -80px; width: 420px; height: 420px;
+      background: radial-gradient(circle at 30% 30%, rgba(243,163,91,0.18), transparent 60%);
+      border-radius: 50%; pointer-events: none;
+    }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; }
+    .pill-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--white); color: var(--teal-dark); font-weight: 700; font-size: 13px;
+      padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line); box-shadow: var(--shadow-sm);
+    }
+    .pill-tag .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--citrus); }
+    h1 { font-size: clamp(38px, 5.5vw, 62px); line-height: 1.04; font-weight: 900; letter-spacing: -1.5px; margin: 20px 0 10px; }
+    h1 .accent { color: var(--teal); }
+    .slogan { font-size: clamp(17px, 2.2vw, 22px); font-weight: 700; color: var(--coral); margin-bottom: 18px; }
+    .hero p.lead { font-size: 18px; color: var(--muted); max-width: 520px; margin-bottom: 30px; }
+    .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
+    .hero-stats { display: flex; gap: 30px; margin-top: 40px; }
+    .hero-stats div b { display: block; font-size: 26px; font-weight: 800; color: var(--teal-dark); }
+    .hero-stats div span { font-size: 13px; color: var(--muted); font-weight: 600; }
+
+    .hero-card {
+      background: var(--white); border-radius: 28px; padding: 30px; box-shadow: var(--shadow);
+      border: 1px solid var(--line); position: relative;
+    }
+    .hero-card .price-big { font-size: 58px; font-weight: 900; color: var(--ink); letter-spacing: -2px; }
+    .hero-card .price-big small { font-size: 18px; font-weight: 700; color: var(--muted); }
+    .hero-card ul { list-style: none; margin: 20px 0 26px; display: grid; gap: 12px; }
+    .hero-card li { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; color: var(--ink); font-weight: 500; }
+    .hero-card li svg { flex: 0 0 auto; margin-top: 2px; }
+    .hero-card .btn { width: 100%; }
+
+    /* ===== Section ===== */
+    section.block { padding: 80px 0; }
+    .section-head { text-align: center; max-width: 640px; margin: 0 auto 52px; }
+    .eyebrow { color: var(--teal); font-weight: 800; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; }
+    .section-head h2 { font-size: clamp(30px, 4vw, 44px); font-weight: 800; letter-spacing: -1px; margin: 12px 0 10px; }
+    .section-head p { color: var(--muted); font-size: 17px; }
+
+    .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .step { background: var(--white); border: 1px solid var(--line); border-radius: 22px; padding: 30px 26px; box-shadow: var(--shadow-sm); position: relative; }
+    .step .num { width: 46px; height: 46px; border-radius: 14px; background: var(--mint); color: var(--teal-dark); display: grid; place-items: center; font-weight: 800; font-size: 20px; margin-bottom: 18px; }
+    .step h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+    .step p { color: var(--muted); font-size: 15px; }
+
+    /* ===== Why ===== */
+    .why { background: linear-gradient(180deg, var(--paper), var(--mint-soft)); }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .feature { background: var(--white); border-radius: 20px; padding: 26px; border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
+    .feature .ic { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; margin-bottom: 14px; }
+    .feature h3 { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+    .feature p { color: var(--muted); font-size: 14.5px; }
+
+    /* ===== Pricing ===== */
+    .price-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: start; }
+    .plan { background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 32px 28px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; }
+    .plan.featured { border: 2px solid var(--teal); box-shadow: var(--shadow); position: relative; transform: translateY(-8px); }
+    .plan .badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--citrus), var(--coral)); color: #fff; font-size: 12px; font-weight: 800; padding: 6px 16px; border-radius: 999px; letter-spacing: 0.5px; }
+    .plan h3 { font-size: 22px; font-weight: 800; }
+    .plan .p-sub { color: var(--muted); font-size: 14px; margin-bottom: 18px; }
+    .plan .amt { font-size: 44px; font-weight: 900; letter-spacing: -1.5px; color: var(--ink); }
+    .plan .amt small { font-size: 15px; font-weight: 600; color: var(--muted); }
+    .plan ul { list-style: none; margin: 20px 0 26px; display: grid; gap: 11px; }
+    .plan li { display: flex; gap: 10px; font-size: 14.5px; color: var(--ink); }
+    .plan li svg { flex: 0 0 auto; margin-top: 2px; }
+    .plan .btn { margin-top: auto; width: 100%; }
+
+    /* ===== Contact ===== */
+    .contact { background: var(--ink); color: #fff; }
+    .contact .section-head h2 { color: #fff; }
+    .contact .section-head p { color: #B9CFC9; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+    .contact-info { display: grid; gap: 18px; }
+    .contact-row { display: flex; gap: 16px; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 18px 20px; border-radius: 16px; }
+    .contact-row .ic { width: 46px; height: 46px; border-radius: 12px; background: var(--teal); display: grid; place-items: center; flex: 0 0 auto; }
+    .contact-row .lbl { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--citrus); }
+    .contact-row .val { font-size: 18px; font-weight: 700; color: #fff; }
+    .contact-row a.val:hover { color: var(--citrus); }
+    .contact-cta { background: linear-gradient(150deg, var(--teal-dark), var(--teal)); border-radius: 24px; padding: 40px 34px; text-align: center; box-shadow: var(--shadow); }
+    .contact-cta h3 { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+    .contact-cta p { color: #D6EAE4; margin-bottom: 24px; font-size: 15px; }
+    .contact-cta .btn { width: 100%; margin-bottom: 12px; }
+    .contact-cta .note { font-size: 13px; color: #B9CFC9; }
+
+    /* ===== Footer ===== */
+    footer { background: #0F2A26; color: #9DB6B0; padding: 40px 0; text-align: center; font-size: 14px; }
+    footer .fbrand { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 14px; }
+    footer .fbrand img { width: 34px; height: 34px; }
+    footer .fbrand b { color: #fff; font-size: 18px; font-weight: 800; }
+    footer a { color: var(--citrus); }
+    footer .tag { color: var(--coral); font-weight: 700; margin-top: 6px; }
+
+    @media (max-width: 860px) {
+      .nav-links { display: none; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .how-grid, .feature-grid, .price-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .plan.featured { transform: none; }
+      .hero-stats { gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top">
+        <img src="logo.svg" alt="Curbside Care logo" />
+        <div>
+          <b>Curbside Care</b>
+          <span>Gainesville, TX</span>
+        </div>
+      </a>
+      <div class="nav-links">
+        <a href="#how">How it works</a>
+        <a href="#why">Why us</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <a class="btn btn-primary" href="#contact">Get started</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="pill-tag"><span class="dot"></span> Trash-bin concierge · Gainesville, TX</span>
+        <h1>We handle the bins.<br><span class="accent">You handle literally anything else.</span></h1>
+        <p class="slogan">Talk Trash To Us...Seriously....We love it!</p>
+        <p class="lead">Curbside Care moves your bins to the curb the night before pickup, cleans them after collection, and returns them where they belong. No more smelly bins. No more missed pickup days.</p>
+        <div class="hero-cta">
+          <a class="btn btn-coral" href="#contact">Start service — $20/mo</a>
+          <a class="btn btn-ghost" href="#how">See how it works</a>
+        </div>
+        <div class="hero-stats">
+          <div><b>$20</b><span>per month</span></div>
+          <div><b>3x</b><span>weekly touchpoints</span></div>
+          <div><b>100%</b><span>hands-off for you</span></div>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="price-big">$20<small>/month</small></div>
+        <p style="color:var(--muted);font-weight:600;margin-bottom:4px;">The full Curbside Care plan</p>
+        <ul>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1F806D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Place bins at the curb the night before pickup</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1F806D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Return &amp; put bins back after collection</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1F806D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Power-wash &amp; deodorize your bins</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1F806D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Text and email reminders</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1F806D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Pause or cancel anytime</li>
+        </ul>
+        <a class="btn btn-primary" href="#contact">Sign up today</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HOW IT WORKS -->
+  <section class="block" id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">How it works</span>
+        <h2>Three simple steps</h2>
+        <p>Set it up once. Then forget about trash day entirely.</p>
+      </div>
+      <div class="how-grid">
+        <div class="step">
+          <div class="num">1</div>
+          <h3>We place your bins</h3>
+          <p>The evening before your pickup day, we roll your bins from their spot out to the curb — no lifting required from you.</p>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <h3>We clean &amp; return</h3>
+          <p>After the truck comes, we bring the bins back, power-wash and deodorize them, and park them where they belong.</p>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <h3>You relax</h3>
+          <p>That's it. No missed pickups, no stinky bins, no heavy lifting. Just a cleaner driveway and a lighter to-do list.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="block why" id="why">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Why Curbside Care</span>
+        <h2>Small details, big relief</h2>
+        <p>We're a local Gainesville team that actually cares about your curb.</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature">
+          <div class="ic" style="background:var(--mint)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6L12 2z" stroke="#155C50" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+          <h3>Local &amp; reliable</h3>
+          <p>Gainesville-based and on a fixed route, so your bins are never forgotten on pickup week.</p>
+        </div>
+        <div class="feature">
+          <div class="ic" style="background:#FDEAE0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M3 12h18" stroke="#F2785C" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <h3>Clean bins, always</h3>
+          <p>Regular power-washing keeps pests, odors, and grime away from your home.</p>
+        </div>
+        <div class="feature">
+          <div class="ic" style="background:var(--mint)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#155C50" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h3>No contracts</h3>
+          <p>One flat $20/month. Pause or cancel whenever life changes — no fees, no fuss.</p>
+        </div>
+        <div class="feature">
+          <div class="ic" style="background:#FDEAE0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#F2785C" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+          <h3>Friendly updates</h3>
+          <p>Get a quick text or email so you always know your bins are handled.</p>
+        </div>
+        <div class="feature">
+          <div class="ic" style="background:var(--mint)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4.5 8-11a8 8 0 10-16 0c0 6.5 8 11 8 11z" stroke="#155C50" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="11" r="3" stroke="#155C50" stroke-width="1.8"/></svg></div>
+          <h3>Protects your driveway</h3>
+          <p>Bins stored neatly out of the way — no wind-blown lids or sidewalk clutter.</p>
+        </div>
+        <div class="feature">
+          <div class="ic" style="background:#FDEAE0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" stroke="#F2785C" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+          <h3>Real peace of mind</h3>
+          <p>One less chore on a busy week. That's the whole point of Curbside Care.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="block" id="pricing">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Pricing</span>
+        <h2>Simple, flat pricing</h2>
+        <p>No hidden fees. No surprises. Pick the plan that fits your home.</p>
+      </div>
+      <div class="price-grid">
+        <div class="plan">
+          <h3>Bin Placement</h3>
+          <p class="p-sub">Curb drop-off only</p>
+          <div class="amt">$12<small>/mo</small></div>
+          <ul>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1F806D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Place bins at curb before pickup</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1F806D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Return bins after collection</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1F806D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Pickup reminders</li>
+          </ul>
+          <a class="btn btn-ghost" href="#contact">Choose placement</a>
+        </div>
+
+        <div class="plan featured">
+          <span class="badge">MOST POPULAR</span>
+          <h3>Full Curbside Care</h3>
+          <p class="p-sub">Placement + cleaning</p>
+          <div class="amt">$20<small>/mo</small></div>
+          <ul>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1F806D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Place bins at curb before pickup</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1F806D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Return &amp; store bins after collection</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1F806D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Power-wash &amp; deodorize bins</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1F806D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Text &amp; email reminders</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1F806D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Pause or cancel anytime</li>
+          </ul>
+          <a class="btn btn-primary" href="#contact">Get full care</a>
+        </div>
+
+        <div class="plan">
+          <h3>Multi-Bin</h3>
+          <p class="p-sub">Up to 4 bins, full care</p>
+          <div class="amt">$28<small>/mo</small></div>
+          <ul>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1F806D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Everything in Full Care</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1F806D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Up to 4 bins handled</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1F806D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Great for large households</li>
+          </ul>
+          <a class="btn btn-ghost" href="#contact">Choose multi-bin</a>
+        </div>
+      </div>
+      <p style="text-align:center;color:var(--muted);margin-top:28px;font-size:14px;">All plans are month-to-month. Serving Gainesville, Texas.</p>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="block contact" id="contact">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow" style="color:var(--citrus)">Contact</span>
+        <h2>Talk Trash To Us</h2>
+        <p>Seriously... we love it! Reach out and we'll get you signed up.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <div class="contact-row">
+            <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.6A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.6a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.5-1.1a2 2 0 012.1-.5c.8.3 1.7.5 2.6.6a2 2 0 011.7 2z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+            <div>
+              <div class="lbl">Call or text</div>
+              <a class="val" href="tel:9406129836">940-612-9836</a>
+            </div>
+          </div>
+          <div class="contact-row">
+            <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.6A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.6a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.5-1.1a2 2 0 012.1-.5c.8.3 1.7.5 2.6.6a2 2 0 011.7 2z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+            <div>
+              <div class="lbl">Alternate line</div>
+              <a class="val" href="tel:9406129045">940-612-9045</a>
+            </div>
+          </div>
+          <div class="contact-row">
+            <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4z" stroke="#fff" stroke-width="1.8"/><path d="M4 6l8 6 8-6" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+            <div>
+              <div class="lbl">Email</div>
+              <a class="val" href="mailto:CurbsideCare940@gmail.com">CurbsideCare940@gmail.com</a>
+            </div>
+          </div>
+          <div class="contact-row">
+            <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4.5 8-11a8 8 0 10-16 0c0 6.5 8 11 8 11z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="11" r="3" stroke="#fff" stroke-width="1.8"/></svg></div>
+            <div>
+              <div class="lbl">Service area</div>
+              <div class="val">Gainesville, Texas</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-cta">
+          <h3>Ready to ditch trash day?</h3>
+          <p>Text or call us, or shoot an email. We'll get your bins on the route fast.</p>
+          <a class="btn btn-coral" href="tel:9406129836">Call 940-612-9836</a>
+          <a class="btn btn-ghost" style="background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.25);" href="mailto:CurbsideCare940@gmail.com">Email us</a>
+          <p class="note">Talk Trash To Us...Seriously....We love it!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="fbrand">
+      <img src="logo.svg" alt="Curbside Care logo" />
+      <b>Curbside Care</b>
+    </div>
+    <div>Serving Gainesville, Texas · $20/month · Call or text 940-612-9836</div>
+    <div class="tag">Talk Trash To Us...Seriously....We love it!</div>
+    <div style="margin-top:14px;font-size:12px;color:#7E9892;">© <span id="year"></span> Curbside Care. All rights reserved.</div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

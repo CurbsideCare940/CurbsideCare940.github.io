@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Background circle: mint green -->
+  <circle cx="256" cy="256" r="220" fill="#E3F4EE"/>
+  <!-- Trash bin body: teal -->
+  <rect x="136" y="200" width="240" height="220" rx="24" ry="24" fill="#1F806D"/>
+  <!-- Bin lid: tealDark with green leaf accent -->
+  <path d="M120 200 L392 200 L392 170 L120 170 Z" fill="#155C50"/>
+  <!-- Handles -->
+  <rect x="160" y="140" width="40" height="8" rx="4" fill="#155C50"/>
+  <rect x="312" y="140" width="40" height="8" rx="4" fill="#155C50"/>
+  <!-- Leaf accent on lid: citrus/coral to green gradient -->
+  <path d="M256 120 C230 130, 210 160, 220 190 C230 220, 270 220, 280 190 C290 160, 270 130, 256 120 Z" fill="#4CAF50"/>
+  <!-- Leaf veins -->
+  <path d="M250 155 L262 155 M252 170 L260 170 M256 180 L256 195" stroke="#155C50" stroke-width="2" stroke-linecap="round"/>
+  <!-- Bin grooves -->
+  <rect x="150" y="215" width="3" height="180" rx="1.5" fill="#155C50" opacity="0.3"/>
+  <rect x="256" y="215" width="3" height="180" rx="1.5" fill="#155C50" opacity="0.3"/>
+  <rect x="359" y="215" width="3" height="180" rx="1.5" fill="#155C50" opacity="0.3"/>
+  <!-- Bottom base -->
+  <rect x="120" y="415" width="272" height="10" rx="5" fill="#155C50" opacity="0.2"/>
+</svg>
