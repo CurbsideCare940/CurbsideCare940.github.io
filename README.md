@@ -10,6 +10,8 @@ Free one-page marketing site for **Curbside Care**, a residential trash-bin conc
 
 The signup form sends guest contact/address details to the Curbside Care Supabase `enroll-guest` Edge Function for project `zhhkcnqwujuizytlbxeu`. That server function assigns the pickup zone, creates the customer record, and returns a PayPal approval URL. Until the Edge Function is deployed and PayPal secrets are configured, the form safely falls back to the call/text number.
 
+Custom domain: `https://curbsidecare.net` (GitHub Pages `CNAME` file). Configure the domain's DNS in Cloudflare and enable HTTPS in GitHub Pages after the DNS check passes.
+
 ## Files
 - `index.html` — the single page (all CSS inline, no build step)
 - `logo.svg` — vector brand logo (teal/green with citrus accent)
