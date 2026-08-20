@@ -8,7 +8,7 @@ Free one-page marketing site for **Curbside Care**, a residential trash-bin conc
 - Contact: 940-612-9836 / 940-612-9045 · CurbsideCare940@gmail.com
 - Service area: Gainesville, Texas
 
-The signup form sends guest contact/address details to the Curbside Care Supabase `enroll-guest` Edge Function. That server function assigns the pickup zone, creates the customer record, and returns a PayPal approval URL. Replace the `SUPABASE_FUNCTION_URL` constant in `index.html` with the deployed Supabase Functions URL before publishing.
+The signup form sends guest contact/address details to the Curbside Care Supabase `enroll-guest` Edge Function for project `zhhkcnqwujuizytlbxeu`. That server function assigns the pickup zone, creates the customer record, and returns a PayPal approval URL. Until the Edge Function is deployed and PayPal secrets are configured, the form safely falls back to the call/text number.
 
 ## Files
 - `index.html` — the single page (all CSS inline, no build step)
