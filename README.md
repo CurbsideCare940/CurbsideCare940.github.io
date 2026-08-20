@@ -8,10 +8,13 @@ Free one-page marketing site for **Curbside Care**, a residential trash-bin conc
 - Contact: 940-612-9836 / 940-612-9045 · CurbsideCare940@gmail.com
 - Service area: Gainesville, Texas
 
+The signup form sends guest contact/address details to the Curbside Care Supabase `enroll-guest` Edge Function. That server function assigns the pickup zone, creates the customer record, and returns a PayPal approval URL. Replace the `SUPABASE_FUNCTION_URL` constant in `index.html` with the deployed Supabase Functions URL before publishing.
+
 ## Files
 - `index.html` — the single page (all CSS inline, no build step)
 - `logo.svg` — vector brand logo (teal/green with citrus accent)
 - `favicon.png` — PNG favicon rendered from the same brand mark
+- `SUPABASE_SETUP.md` — secure Supabase/PayPal deployment and webhook setup
 
 ## Publish (GitHub Pages)
 1. Create a repo (e.g. `curbside-care`) on GitHub.

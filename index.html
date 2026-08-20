@@ -102,6 +102,18 @@
     .hero-card li svg { flex: 0 0 auto; margin-top: 2px; }
     .hero-card .btn { width: 100%; }
 
+    .signup-panel { margin-top: 24px; background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 28px; box-shadow: var(--shadow); }
+    .signup-panel h3 { font-size: 25px; margin-bottom: 6px; }
+    .signup-panel p { color: var(--muted); font-size: 14px; margin-bottom: 18px; }
+    .signup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .signup-grid .full { grid-column: 1 / -1; }
+    .signup-panel label { display: grid; gap: 5px; color: var(--ink); font-size: 12px; font-weight: 800; }
+    .signup-panel input, .signup-panel select { width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 12px; font: inherit; color: var(--ink); background: var(--paper); }
+    .signup-panel input:focus, .signup-panel select:focus { outline: 3px solid rgba(31,128,109,.18); border-color: var(--teal); }
+    .signup-status { min-height: 22px; margin-top: 12px; font-size: 13px; font-weight: 700; }
+    .signup-status.error { color: var(--coral); }
+    .signup-status.success { color: var(--teal-dark); }
+
     /* ===== Section ===== */
     section.block { padding: 80px 0; }
     .section-head { text-align: center; max-width: 640px; margin: 0 auto 52px; }
@@ -212,7 +224,7 @@
         <p class="slogan">Talk Trash To Us...Seriously....We love it!</p>
         <p class="lead">Curbside Care moves your bins to the curb the night before pickup, cleans them after collection, and returns them where they belong. No more smelly bins. No more missed pickup days.</p>
         <div class="hero-cta">
-          <a class="btn btn-coral" href="#contact">Start service — $20/mo</a>
+          <a class="btn btn-coral" href="#signup">Start service — $20/mo</a>
           <a class="btn btn-ghost" href="#how">See how it works</a>
         </div>
         <div class="hero-stats">
@@ -230,7 +242,7 @@
           <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1F806D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Power-wash your bins</li>
           <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1F806D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Pause or cancel anytime</li>
         </ul>
-        <a class="btn btn-primary" href="#contact">Sign up today</a>
+        <a class="btn btn-primary" href="#signup">Sign up today</a>
       </div>
     </div>
   </header>
@@ -332,6 +344,34 @@
     </div>
   </section>
 
+  <!-- SIGNUP -->
+  <section class="block" id="signup">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Start with your address</span>
+        <h2>Let us put you on the right route.</h2>
+        <p>Enter your contact and service details. We determine the Gainesville pickup zone on the server, then send you to PayPal to finish the $20/month subscription.</p>
+      </div>
+      <form class="signup-panel" id="signup-form">
+        <h3>Request Curbside Care</h3>
+        <p>Your address determines your official pickup day. You do not need to choose a zone.</p>
+        <div class="signup-grid">
+          <label>Full name<input name="fullName" autocomplete="name" required /></label>
+          <label>Phone<input name="phone" type="tel" autocomplete="tel" required /></label>
+          <label class="full">Email<input name="email" type="email" autocomplete="email" required /></label>
+          <label>Street address<input name="address" autocomplete="street-address" required /></label>
+          <label>City<input name="city" value="Gainesville" required /></label>
+          <label>State<input name="state" value="TX" maxlength="2" required /></label>
+          <label>ZIP code<input name="postalCode" inputmode="numeric" pattern="[0-9]{5}" required /></label>
+          <label>Number of bins<select name="bins"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option></select></label>
+          <label class="full">Preferred return location<input name="returnLocation" value="Beside garage" required /></label>
+        </div>
+        <button class="btn btn-coral" type="submit" style="margin-top:18px;width:100%;">Check address &amp; continue to PayPal</button>
+        <div class="signup-status" id="signup-status" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </section>
+
   <!-- CONTACT -->
   <section class="block contact" id="contact">
     <div class="wrap">
@@ -375,7 +415,7 @@
         <div class="contact-cta">
           <h3>Ready to ditch trash day?</h3>
           <p>Text or call us, or shoot an email. We'll get your bins on the route fast.</p>
-          <a class="btn btn-coral" href="tel:9406129836">Call 940-612-9836</a>
+          <a class="btn btn-coral" href="#signup">Start online signup</a>
           <a class="btn btn-ghost" style="background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.25);" href="mailto:CurbsideCare940@gmail.com">Email us</a>
           <p class="note">Talk Trash To Us...Seriously....We love it!</p>
         </div>
@@ -393,21 +433,36 @@
     <div style="margin-top:14px;font-size:12px;color:#7E9892;">© <span id="year"></span> Curbside Care. All rights reserved.</div>
   </footer>
 
-  <!-- PayPal subscription (Full Curbside Care — $20/mo) -->
-  <script src="https://www.paypal.com/sdk/js?client-id=BAAmN-whMEfdBs0r97GMN_IELLQ8Jba8JnPrbUURYfOOvYnlM1o1srjfs914-ph0Pd1f04H6UsiW8niZSY&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
   <script>
-    if (window.paypal) {
-      paypal.Buttons({
-        style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'subscribe' },
-        createSubscription: function (data, actions) {
-          return actions.subscription.create({ plan_id: 'P-0F418966DC526935KNKC6JJY' });
-        },
-        onApprove: function (data, actions) {
-          alert('Thanks for subscribing to Curbside Care! Subscription ID: ' + data.subscriptionID);
-        }
-      }).render('#paypal-button-container-P-0F418966DC526935KNKC6JJY');
-    }
+    // Public Pages only calls the Supabase Edge Function. PayPal client secrets and Plan IDs stay server-side.
+    const SUPABASE_FUNCTION_URL = 'https://YOUR_PROJECT_REF.supabase.co/functions/v1';
+    const form = document.getElementById('signup-form');
+    const status = document.getElementById('signup-status');
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      status.className = 'signup-status';
+      status.textContent = '';
+      if (!SUPABASE_FUNCTION_URL) {
+        status.className = 'signup-status error';
+        status.textContent = 'Online signup is being connected. Please call or text 940-612-9836 to get started today.';
+        return;
+      }
+      const data = Object.fromEntries(new FormData(form).entries());
+      data.bins = Number(data.bins);
+      status.textContent = 'Checking your address…';
+      try {
+        const response = await fetch(SUPABASE_FUNCTION_URL + '/enroll-guest', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-client-info': 'curbside-care-pages' }, body: JSON.stringify(data) });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'We could not process that address.');
+        status.className = 'signup-status success';
+        status.textContent = result.message || 'Address verified. Opening secure PayPal checkout…';
+        if (result.approvalUrl) window.location.href = result.approvalUrl;
+      } catch (error) {
+        status.className = 'signup-status error';
+        status.textContent = error.message || 'Something went wrong. Please call or text us.';
+      }
+    });
+    document.getElementById('year').textContent = new Date().getFullYear();
   </script>
-  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>
