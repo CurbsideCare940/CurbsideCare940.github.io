@@ -24,6 +24,8 @@ The public page calls:
 POST https://YOUR_PROJECT_REF.supabase.co/functions/v1/enroll-guest
 ```
 
+After `supabase db push`, replace the `SUPABASE_FUNCTION_URL` placeholder in `index.html` with that URL and push the website repository again. The current live page intentionally keeps the placeholder until the real Supabase project reference is supplied; it falls back to the call/text number instead of sending customer information to a made-up endpoint.
+
 Replace `YOUR_PROJECT_REF` in `index.html` with the real Supabase project reference before committing.
 
 ## 2. Guest flow
