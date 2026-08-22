@@ -461,7 +461,7 @@
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'We could not process that address.');
         status.className = 'signup-status success';
-        status.textContent = result.message || 'Your account was created. Download the Curbside Care app and sign in with your email and password.';
+        status.textContent = 'Your account was created. Download the Curbside Care app, sign in, open Billing, and tap "Start PayPal subscription" to finish your $20/month setup.';
         if (result.approvalUrl) {
           const note = document.createElement('div');
           note.style.marginTop = '12px';
