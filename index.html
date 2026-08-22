@@ -350,7 +350,7 @@
       <div class="section-head">
         <span class="eyebrow">Start with your address</span>
         <h2>Let us put you on the right route.</h2>
-        <p>Enter your contact and service details. We determine the Gainesville pickup zone on the server, then send you to PayPal to finish the $20/month subscription.</p>
+        <p>Enter your contact, service, and login details. We determine the Gainesville pickup zone on the server, then send you to PayPal to finish the $20/month subscription. After signup, download the Curbside Care app and sign in with the email and password you create here.</p>
       </div>
       <form class="signup-panel" id="signup-form">
         <h3>Request Curbside Care</h3>
@@ -359,6 +359,7 @@
           <label>Full name<input name="fullName" autocomplete="name" required /></label>
           <label>Phone<input name="phone" type="tel" autocomplete="tel" required /></label>
           <label class="full">Email<input name="email" type="email" autocomplete="email" required /></label>
+          <label class="full">Create password<input name="password" type="password" autocomplete="new-password" minlength="8" required /></label>
           <label>Street address<input name="address" autocomplete="street-address" required /></label>
           <label>City<input name="city" value="Gainesville" required /></label>
           <label>State<input name="state" value="TX" maxlength="2" required /></label>
@@ -366,7 +367,7 @@
           <label>Number of bins<select name="bins"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option></select></label>
           <label class="full">Preferred return location<input name="returnLocation" value="Beside garage" required /></label>
         </div>
-        <button class="btn btn-coral" type="submit" style="margin-top:18px;width:100%;">Check address &amp; continue to PayPal</button>
+        <button class="btn btn-coral" type="submit" style="margin-top:18px;width:100%;">Create account &amp; continue</button>
         <div class="signup-status" id="signup-status" role="status" aria-live="polite"></div>
       </form>
     </div>
@@ -449,14 +450,25 @@
       }
       const data = Object.fromEntries(new FormData(form).entries());
       data.bins = Number(data.bins);
-      status.textContent = 'Checking your address…';
+      if (!data.password || String(data.password).length < 8) {
+        status.className = 'signup-status error';
+        status.textContent = 'Please create a password of at least 8 characters.';
+        return;
+      }
+      status.textContent = 'Creating your account…';
       try {
         const response = await fetch(SUPABASE_FUNCTION_URL + '/enroll-guest', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-client-info': 'curbside-care-pages' }, body: JSON.stringify(data) });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'We could not process that address.');
         status.className = 'signup-status success';
-        status.textContent = result.message || 'Address verified. Opening secure PayPal checkout…';
-        if (result.approvalUrl) window.location.href = result.approvalUrl;
+        status.textContent = result.message || 'Your account was created. Download the Curbside Care app and sign in with your email and password.';
+        if (result.approvalUrl) {
+          const note = document.createElement('div');
+          note.style.marginTop = '12px';
+          note.innerHTML = 'Opening secure PayPal checkout… <a href="https://curbsidecare.net" style="color:#1F806D;font-weight:700;">Get the Curbside Care app</a>';
+          status.appendChild(note);
+          window.location.href = result.approvalUrl;
+        }
       } catch (error) {
         status.className = 'signup-status error';
         status.textContent = error.message || 'Something went wrong. Please call or text us.';
