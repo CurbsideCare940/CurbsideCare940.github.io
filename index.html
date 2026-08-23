@@ -206,7 +206,8 @@
         <a href="#pricing">Pricing</a>
         <a href="#contact">Contact</a>
       </div>
-      <a class="btn btn-primary" href="#contact">Get started</a>
+      <a class="btn btn-primary" href="https://curbsidecare.net/app/">Get started</a>
+      <a class="btn btn-ghost" href="https://curbsidecare.net/app/">Login</a>
     </div>
   </nav>
 
@@ -439,6 +440,17 @@
     const SUPABASE_FUNCTION_URL = 'https://zhhkcnqwujuizytlbxeu.supabase.co/functions/v1';
     const form = document.getElementById('signup-form');
     const status = document.getElementById('signup-status');
+    // Support referred-friend signup: ?ref=<referrer_customers_id> pre-fills
+    // referralCode so enroll-guest records the referral (migration 0013).
+    const params = new URLSearchParams(window.location.search);
+    const refParam = params.get('ref');
+    if (refParam) {
+      const refInput = document.createElement('input');
+      refInput.type = 'hidden';
+      refInput.name = 'referralCode';
+      refInput.value = refParam;
+      form.appendChild(refInput);
+    }
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       status.className = 'signup-status';
