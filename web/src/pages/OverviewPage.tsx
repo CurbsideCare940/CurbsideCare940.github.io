@@ -66,7 +66,7 @@ export default function OverviewPage() {
           >
             <div>
               <div style={{ fontSize: 13, color: "var(--muted)" }}>Pickup zone</div>
-              <div style={{ fontSize: 18, fontWeight: 800 }}>{c.zone_code ?? "—"}</div>
+              <div style={{ fontSize: 18, fontWeight: 800 }}>{c.service_zones?.zone_code ?? "—"}</div>
             </div>
             <div>
               <div style={{ fontSize: 13, color: "var(--muted)" }}>Pickup day</div>

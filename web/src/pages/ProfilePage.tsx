@@ -116,7 +116,7 @@ export default function ProfilePage() {
       <div className="card" style={{ marginTop: 16 }}>
         <h4 style={{ marginTop: 0 }}>Service details (read-only)</h4>
         <div style={{ fontSize: 14, color: "var(--muted)" }}>
-          <div>Zone: <strong>{c.zone_code ?? "—"}</strong></div>
+          <div>Zone: <strong>{c.service_zones?.zone_code ?? "—"}</strong></div>
           <div>Pickup day: <strong>{c.official_pickup_day}</strong></div>
           <div>Address: <strong>{`${c.address}, ${c.city}, ${c.state} ${c.postal_code}`}</strong></div>
           <div>Account active: <strong>{c.active ? "Yes" : "No"}</strong></div>

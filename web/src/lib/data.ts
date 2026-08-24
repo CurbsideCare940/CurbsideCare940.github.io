@@ -16,8 +16,8 @@ export interface CustomerProfile {
     return_location: string;
     access_notes: string | null;
     official_pickup_day: string;
-    zone_code: string | null;
     active: boolean;
+    service_zones: { zone_code: string; service_night: string | null } | null;
   } | null;
 }
 
@@ -60,7 +60,7 @@ export async function fetchCustomerProfile(): Promise<CustomerProfile> {
     .from("profiles")
     .select(
       `full_name, email, phone,
-       customers!profile_id!inner(id, address, city, state, postal_code, number_of_bins, return_location, access_notes, official_pickup_day, zone_code, active)`,
+       customers!profile_id!inner(id, address, city, state, postal_code, number_of_bins, return_location, access_notes, official_pickup_day, active, service_zones!inner(zone_code, service_night, pickup_day))`,
     )
     .eq("id", user.id)
     .maybeSingle();
@@ -222,8 +222,8 @@ export interface AdminCustomerRow {
     number_of_bins: number;
     return_location: string;
     official_pickup_day: string;
-    zone_code: string | null;
     active: boolean;
+    service_zones: { zone_code: string; service_night: string | null } | null;
   } | null;
   subscriptions: {
     status: string;
@@ -237,8 +237,7 @@ export async function fetchAllCustomers(): Promise<AdminCustomerRow[]> {
     .from("profiles")
     .select(
       `id, full_name, email, phone,
-       customers!profile_id(id, address, city, state, postal_code, number_of_bins, return_location, official_pickup_day, zone_code, active),
-       subscriptions(status, paypal_subscription_id, next_billing_date)`,
+       customers!profile_id(id, address, city, state, postal_code, number_of_bins, return_location, official_pickup_day, active,\n         service_zones!inner(zone_code, service_night, pickup_day),\n         subscriptions!inner(status, paypal_subscription_id, next_billing_date))`,
     )
     .eq("role", "customer");
   if (error) throw new Error(error.message);
@@ -249,9 +248,9 @@ export async function fetchAllCustomers(): Promise<AdminCustomerRow[]> {
     email: p.email,
     phone: p.phone,
     customers: Array.isArray(p.customers) ? p.customers[0] ?? null : p.customers ?? null,
-    subscriptions: Array.isArray(p.subscriptions)
-      ? p.subscriptions[0] ?? null
-      : p.subscriptions ?? null,
+    subscriptions: Array.isArray(p.customers?.subscriptions)
+      ? p.customers.subscriptions[0] ?? null
+      : p.customers?.subscriptions ?? null,
   }));
 }
 
@@ -271,7 +270,7 @@ export async function fetchAllTickets(): Promise<TicketRow[]> {
     .from("support_tickets")
     .select(
       `id, category, message, status, admin_response, created_at, resolved_at,
-       customers!profile_id!inner(profiles!inner(full_name, email))`,
+       customers!customer_id!inner(profiles!profile_id!inner(full_name, email))`,
     )
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
@@ -293,9 +292,11 @@ export async function fetchAllTickets(): Promise<TicketRow[]> {
 }
 
 export async function fetchZones() {
+  // service_zones columns: zone_code, service_night, pickup_day, map_color,
+  // trash_zone_id, trash_zone_code, dataset_version, boundary, active.
   const { data, error } = await supabase
     .from("service_zones")
-    .select("zone_code, official_pickup_day, service_night, active")
+    .select("zone_code, pickup_day, service_night, trash_zone_id, active")
     .order("zone_code");
   if (error) throw new Error(error.message);
   return data ?? [];

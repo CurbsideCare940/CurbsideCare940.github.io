@@ -42,7 +42,7 @@ export default function CustomersPage() {
                 <td>{c.email}</td>
                 <td>{c.phone ?? "—"}</td>
                 <td>{c.customers?.number_of_bins ?? 0}</td>
-                <td>{c.customers?.zone_code ?? "—"}</td>
+                <td>{c.customers?.service_zones?.zone_code ?? "—"}</td>
                 <td>
                   <StatusBadge status={c.subscriptions?.status ?? "none"} />
                   {c.subscriptions?.paypal_subscription_id && (

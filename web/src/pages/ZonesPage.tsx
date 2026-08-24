@@ -33,7 +33,7 @@ export default function ZonesPage() {
             {zones.map((z) => (
               <tr key={z.zone_code}>
                 <td>{z.zone_code}</td>
-                <td>{z.official_pickup_day}</td>
+                <td>{z.pickup_day}</td>
                 <td>{z.service_night}</td>
                 <td>{z.active ? "Yes" : "No"}</td>
               </tr>
