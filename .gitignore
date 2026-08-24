@@ -1,0 +1,8 @@
+# Prevent accidental commits of build artifacts and local tooling.
+node_modules/
+web/node_modules/
+web/dist/
+web/.local-types/
+
+# Logs
+*.log
