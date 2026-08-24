@@ -60,7 +60,7 @@ export async function fetchCustomerProfile(): Promise<CustomerProfile> {
     .from("profiles")
     .select(
       `full_name, email, phone,
-       customers!inner(id, address, city, state, postal_code, number_of_bins, return_location, access_notes, official_pickup_day, zone_code, active)`,
+       customers!profile_id!inner(id, address, city, state, postal_code, number_of_bins, return_location, access_notes, official_pickup_day, zone_code, active)`,
     )
     .eq("id", user.id)
     .maybeSingle();
@@ -80,7 +80,7 @@ export async function fetchCustomerProfile(): Promise<CustomerProfile> {
 export async function fetchSubscription(): Promise<SubscriptionRow | null> {
   const { data: prof, error: profErr } = await supabase
     .from("profiles")
-    .select(`id, customers!inner(id)`)
+    .select(`id, customers!profile_id!inner(id)`)
     .eq("id", (await supabase.auth.getUser()).data.user?.id)
     .maybeSingle();
   if (profErr) throw profErr;
@@ -98,7 +98,7 @@ export async function fetchSubscription(): Promise<SubscriptionRow | null> {
 export async function fetchPayments(limit = 12): Promise<PaymentRow[]> {
   const { data: prof, error: profErr } = await supabase
     .from("profiles")
-    .select(`id, customers!inner(id)`)
+    .select(`id, customers!profile_id!inner(id)`)
     .eq("id", (await supabase.auth.getUser()).data.user?.id)
     .maybeSingle();
   if (profErr) {
@@ -237,7 +237,7 @@ export async function fetchAllCustomers(): Promise<AdminCustomerRow[]> {
     .from("profiles")
     .select(
       `id, full_name, email, phone,
-       customers(id, address, city, state, postal_code, number_of_bins, return_location, official_pickup_day, zone_code, active),
+       customers!profile_id(id, address, city, state, postal_code, number_of_bins, return_location, official_pickup_day, zone_code, active),
        subscriptions(status, paypal_subscription_id, next_billing_date)`,
     )
     .eq("role", "customer");
@@ -271,7 +271,7 @@ export async function fetchAllTickets(): Promise<TicketRow[]> {
     .from("support_tickets")
     .select(
       `id, category, message, status, admin_response, created_at, resolved_at,
-       customers!inner(profiles!inner(full_name, email))`,
+       customers!profile_id!inner(profiles!inner(full_name, email))`,
     )
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
