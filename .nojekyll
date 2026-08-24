@@ -1,0 +1,5 @@
+# Disable Jekyll processing on GitHub Pages.
+# This repo serves static built assets (HTML/JS/CSS) directly; with
+# Pages' default Jekyll build, the web/ source tree and build config
+# files cause build failures. .nojekyll tells Pages to serve everything
+# verbatim (no Jekyll transform / no _cache).
