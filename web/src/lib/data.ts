@@ -17,6 +17,7 @@ export interface CustomerProfile {
     access_notes: string | null;
     official_pickup_day: string;
     active: boolean;
+    senior_discount: boolean;
     service_zones: { zone_code: string; service_night: string | null } | null;
   } | null;
 }
@@ -60,7 +61,7 @@ export async function fetchCustomerProfile(): Promise<CustomerProfile> {
     .from("profiles")
     .select(
       `full_name, email, phone,
-       customers!profile_id!inner(id, address, city, state, postal_code, number_of_bins, return_location, access_notes, official_pickup_day, active, service_zones!inner(zone_code, service_night, pickup_day))`,
+       customers!profile_id!inner(id, address, city, state, postal_code, number_of_bins, return_location, access_notes, official_pickup_day, active, senior_discount, service_zones!inner(zone_code, service_night, pickup_day))`,
     )
     .eq("id", user.id)
     .maybeSingle();
@@ -223,6 +224,7 @@ export interface AdminCustomerRow {
     return_location: string;
     official_pickup_day: string;
     active: boolean;
+    senior_discount: boolean;
     service_zones: { zone_code: string; service_night: string | null } | null;
   } | null;
   subscriptions: {
@@ -237,7 +239,9 @@ export async function fetchAllCustomers(): Promise<AdminCustomerRow[]> {
     .from("profiles")
     .select(
       `id, full_name, email, phone,
-       customers!profile_id(id, address, city, state, postal_code, number_of_bins, return_location, official_pickup_day, active,\n         service_zones!inner(zone_code, service_night, pickup_day),\n         subscriptions!inner(status, paypal_subscription_id, next_billing_date))`,
+       customers!profile_id(id, address, city, state, postal_code, number_of_bins, return_location, official_pickup_day, active, senior_discount,
+         service_zones!inner(zone_code, service_night, pickup_day),
+         subscriptions!inner(status, paypal_subscription_id, next_billing_date))`,
     )
     .eq("role", "customer");
   if (error) throw new Error(error.message);
@@ -328,6 +332,19 @@ export async function adminResetPassword(payload: {
   );
   if (error) throw new Error(error.message);
   return data;
+}
+
+// Admin-only: toggle the senior 50%-off flag on a customer.
+export async function adminSetSeniorDiscount(
+  customerId: string,
+  senior: boolean,
+) {
+  const { data, error } = await supabase.functions.invoke(
+    "admin-set-senior-discount",
+    { body: { customerId, senior } },
+  );
+  if (error) throw new Error(error.message);
+  return data as { success: boolean; customerId: string; senior: boolean };
 }
 
 // ----- Customer referrals ----

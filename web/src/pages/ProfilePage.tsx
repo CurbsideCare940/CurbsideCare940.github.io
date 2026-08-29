@@ -120,6 +120,12 @@ export default function ProfilePage() {
           <div>Pickup day: <strong>{c.official_pickup_day}</strong></div>
           <div>Address: <strong>{`${c.address}, ${c.city}, ${c.state} ${c.postal_code}`}</strong></div>
           <div>Account active: <strong>{c.active ? "Yes" : "No"}</strong></div>
+          <div>
+            <strong>
+              Senior discount:{" "}
+              {c.senior_discount ? "Yes (50% off — $10/mo)" : "No"}
+            </strong>
+          </div>
         </div>
       </div>
     </div>
