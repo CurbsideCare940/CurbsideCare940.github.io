@@ -16,6 +16,7 @@ export interface CustomerProfile {
     return_location: string;
     access_notes: string | null;
     official_pickup_day: string;
+    curbside_service_day: string | null;
     active: boolean;
     senior_discount: boolean;
     service_zones: { zone_code: string; service_night: string | null } | null;
@@ -61,7 +62,7 @@ export async function fetchCustomerProfile(): Promise<CustomerProfile> {
     .from("profiles")
     .select(
       `full_name, email, phone,
-       customers!profile_id!inner(id, address, city, state, postal_code, number_of_bins, return_location, access_notes, official_pickup_day, active, senior_discount, service_zones!inner(zone_code, service_night, pickup_day))`,
+       customers!profile_id!inner(id, address, city, state, postal_code, number_of_bins, return_location, access_notes, official_pickup_day, curbside_service_day, active, senior_discount, service_zones!inner(zone_code, service_night, pickup_day))`,
     )
     .eq("id", user.id)
     .maybeSingle();
@@ -380,4 +381,38 @@ export async function fetchMyReferrals(): Promise<ReferralRow[]> {
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
   return (data ?? []) as ReferralRow[];
+}
+
+// ----- Subscription status helpers -----
+// "Paid up" = current, no payment needed. Anything else = needs attention.
+export type PaidStatus = "active" | "past_due" | "canceled" | "approval_pending" | "none";
+
+const ACTIVE_STATUSES = new Set(["active", "trialing"]);
+
+export function paidStatus(sub: { status: string } | null | undefined): PaidStatus {
+  if (!sub || !sub.status) return "none";
+  const s = String(sub.status).toLowerCase();
+  if (ACTIVE_STATUSES.has(s)) return "active";
+  if (s === "approval_pending") return "approval_pending";
+  if (s === "past_due" || s === "unpaid" || s === "suspended") return "past_due";
+  if (s === "canceled" || s === "cancelled" || s === "expired" || s === "terminated") {
+    return "canceled";
+  }
+  return "past_due";
+}
+
+export function isPaidUp(sub: { status: string } | null | undefined): boolean {
+  return paidStatus(sub) === "active";
+}
+
+export function needsPayment(sub: { status: string } | null | undefined): boolean {
+  return paidStatus(sub) !== "active";
+}
+
+export function monthlyPriceCents(seniorDiscount: boolean | null | undefined): number {
+  return seniorDiscount ? 1000 : 2000;
+}
+
+export function formatMonthlyPrice(seniorDiscount: boolean | null | undefined): string {
+  return `$${(monthlyPriceCents(seniorDiscount) / 100).toFixed(0)}/month`;
 }
