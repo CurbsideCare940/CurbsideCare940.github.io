@@ -113,6 +113,17 @@
     .signup-status { min-height: 22px; margin-top: 12px; font-size: 13px; font-weight: 700; }
     .signup-status.error { color: var(--coral); }
     .signup-status.success { color: var(--teal-dark); }
+    .promo-block { margin-top: 18px; padding: 14px 16px; border: 1px dashed var(--line); border-radius: 14px; background: rgba(31,128,109,0.04); }
+    .promo-label { display: block; color: var(--ink); font-size: 13px; font-weight: 800; margin-bottom: 8px; }
+    .promo-hint { display: block; font-weight: 500; color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .promo-row { display: flex; gap: 8px; }
+    .promo-row input { flex: 1; border: 1px solid var(--line); border-radius: 12px; padding: 12px; font: inherit; color: var(--ink); background: var(--paper); text-transform: uppercase; letter-spacing: 0.5px; }
+    .promo-row input:focus { outline: 3px solid rgba(31,128,109,.18); border-color: var(--teal); }
+    .promo-apply { padding: 10px 18px; white-space: nowrap; }
+    .promo-status { min-height: 18px; margin-top: 8px; font-size: 12px; font-weight: 600; }
+    .promo-status.error { color: var(--coral); }
+    .promo-status.success { color: var(--teal-dark); }
+    .promo-status.checking { color: var(--muted); }
 
     /* ===== Section ===== */
     section.block { padding: 80px 0; }
@@ -351,7 +362,7 @@
       <div class="section-head">
         <span class="eyebrow">Start with your address</span>
         <h2>Let us put you on the right route.</h2>
-        <p>Enter your contact, service, and login details. We determine the Gainesville pickup zone on the server, then send you to PayPal to finish the $20/month subscription. After signup, download the Curbside Care app and sign in with the email and password you create here.</p>
+        <p>Enter your contact, service, and login details. We determine the Gainesville pickup zone on the server, then send you to PayPal to finish your subscription. After signup, download the Curbside Care app and sign in with the email and password you create here.</p>
       </div>
       <form class="signup-panel" id="signup-form">
         <h3>Request Curbside Care</h3>
@@ -368,7 +379,20 @@
           <label>Number of bins<select name="bins"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option></select></label>
           <label class="full">Preferred return location<input name="returnLocation" value="Beside garage" required /></label>
         </div>
-        <button class="btn btn-coral" type="submit" style="margin-top:18px;width:100%;">Create account &amp; continue</button>
+
+        <div class="promo-block">
+          <label class="full promo-label" for="promo-code-input">
+            Have a promo code?
+            <span class="promo-hint">Optional. If you have a discount code, enter it here.</span>
+          </label>
+          <div class="promo-row">
+            <input id="promo-code-input" name="promoCode" type="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" placeholder="Enter code" />
+            <button type="button" id="promo-apply-btn" class="btn btn-ghost promo-apply">Apply</button>
+          </div>
+          <div id="promo-status" class="promo-status" role="status" aria-live="polite"></div>
+        </div>
+
+        <button class="btn btn-coral" type="submit" style="margin-top:18px;width:100%;" id="signup-submit">Create account &amp; continue</button>
         <div class="signup-status" id="signup-status" role="status" aria-live="polite"></div>
       </form>
     </div>
@@ -440,6 +464,75 @@
     const SUPABASE_FUNCTION_URL = 'https://zhhkcnqwujuizytlbxeu.supabase.co/functions/v1';
     const form = document.getElementById('signup-form');
     const status = document.getElementById('signup-status');
+    const promoInput = document.getElementById('promo-code-input');
+    const promoApplyBtn = document.getElementById('promo-apply-btn');
+    const promoStatus = document.getElementById('promo-status');
+    const submitBtn = document.getElementById('signup-submit');
+    let promoValidated = null; // { code, discountType, monthlyPrice, description } | null
+    const formatReason = (reason) => {
+      switch (reason) {
+        case 'not_found': return "We don't recognize that promo code.";
+        case 'expired': return "That promo code has expired.";
+        case 'disabled': return "That promo code is no longer active.";
+        case 'maxed_out': return "That promo code has reached its usage limit.";
+        case 'not_yet_active': return "That promo code is not yet active.";
+        case 'empty': return "Enter a promo code first.";
+        default: return reason ? `That code isn't valid right now.` : "We couldn't check that code.";
+      }
+    };
+    const setPromoStatus = (kind, text) => {
+      promoStatus.className = 'promo-status' + (kind ? ' ' + kind : '');
+      promoStatus.textContent = text || '';
+    };
+    const validatePromo = async () => {
+      const raw = (promoInput.value || '').trim();
+      if (!raw) {
+        promoValidated = null;
+        setPromoStatus('error', 'Enter a promo code first.');
+        return;
+      }
+      setPromoStatus('checking', 'Checking your code…');
+      promoApplyBtn.disabled = true;
+      try {
+        const resp = await fetch(SUPABASE_FUNCTION_URL + '/validate-promo-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: raw }),
+        });
+        const data = await resp.json();
+        if (data && data.valid && data.discountType) {
+          promoValidated = {
+            code: data.code,
+            discountType: data.discountType,
+            monthlyPrice: Number(data.monthlyPrice || 0),
+            description: data.description || 'Discount applied.',
+          };
+          setPromoStatus('success', `✓ ${promoValidated.description} — your subscription will be $${promoValidated.monthlyPrice.toFixed(0)}/month.`);
+        } else {
+          promoValidated = null;
+          setPromoStatus('error', formatReason(data && data.reason) + ' You can continue without a code.');
+        }
+      } catch (err) {
+        promoValidated = null;
+        setPromoStatus('error', "We couldn't check that code right now. You can continue without it.");
+      } finally {
+        promoApplyBtn.disabled = false;
+      }
+    };
+    promoApplyBtn.addEventListener('click', validatePromo);
+    // Reset validation when the user edits the code.
+    promoInput.addEventListener('input', () => {
+      if (promoValidated) promoValidated = null;
+      setPromoStatus('', '');
+    });
+    // Allow Enter inside the promo input to trigger Apply.
+    promoInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        validatePromo();
+      }
+    });
+
     // Support referred-friend signup: ?ref=<referrer_customers_id> pre-fills
     // referralCode so enroll-guest records the referral (migration 0013).
     const params = new URLSearchParams(window.location.search);
@@ -462,18 +555,29 @@
       }
       const data = Object.fromEntries(new FormData(form).entries());
       data.bins = Number(data.bins);
+      // Drop empty promoCode so enroll-guest sees the same payload as before.
+      if (data.promoCode !== undefined && !String(data.promoCode).trim()) {
+        delete data.promoCode;
+      }
       if (!data.password || String(data.password).length < 8) {
         status.className = 'signup-status error';
         status.textContent = 'Please create a password of at least 8 characters.';
         return;
       }
       status.textContent = 'Creating your account…';
+      submitBtn.disabled = true;
       try {
         const response = await fetch(SUPABASE_FUNCTION_URL + '/enroll-guest', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-client-info': 'curbside-care-pages' }, body: JSON.stringify(data) });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'We could not process that address.');
         status.className = 'signup-status success';
-        status.textContent = 'Your account was created. Download the Curbside Care app, sign in, open Billing, and tap "Start PayPal subscription" to finish your $20/month setup.';
+        const applied = result.appliedPromo;
+        if (applied && applied.discountType) {
+          const monthly = Number(applied.monthlyPrice || 0).toFixed(0);
+          status.textContent = `Your account was created with a ${applied.discountType} discount ($${monthly}/month). Download the Curbside Care app, sign in, open Billing, and complete the PayPal subscription to start service.`;
+        } else {
+          status.textContent = 'Your account was created. Download the Curbside Care app, sign in, open Billing, and tap "Start PayPal subscription" to finish your $20/month setup.';
+        }
         if (result.approvalUrl) {
           const note = document.createElement('div');
           note.style.marginTop = '12px';
@@ -484,6 +588,8 @@
       } catch (error) {
         status.className = 'signup-status error';
         status.textContent = error.message || 'Something went wrong. Please call or text us.';
+      } finally {
+        submitBtn.disabled = false;
       }
     });
     document.getElementById('year').textContent = new Date().getFullYear();
