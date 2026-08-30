@@ -12,7 +12,8 @@ export type AppView =
   | "admin-overview"
   | "admin-customers"
   | "admin-tickets"
-  | "admin-zones";
+  | "admin-zones"
+  | "admin-promo-codes";
 
 interface Ctx {
   view: AppView;
