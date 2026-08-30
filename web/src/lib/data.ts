@@ -67,14 +67,21 @@ export async function fetchCustomerProfile(): Promise<CustomerProfile> {
     .eq("id", user.id)
     .maybeSingle();
   if (error) throw new Error(error.message);
-  const custArr: any[] = (data as any)?.customers ?? [];
-  const cust = custArr[0];
-  if (!cust) throw new Error("No customer profile found");
+  if (!data) throw new Error("No profile row found for the signed-in user.");
+  // PostgREST returns the customers embed as a single object (1:1 via unique profile_id FK)
+  // — NOT an array. Older code coerced it as an array and silently broke the customer
+  // dashboard, so we read it as an object directly.
+  const cust = (data as any).customers ?? null;
+  if (!cust) {
+    throw new Error(
+      "We couldn't find a customer profile linked to your account. Please call or text 940-612-9836 and we'll get it sorted.",
+    );
+  }
   return {
     profile_id: user.id,
-    email: data!.email,
-    full_name: data!.full_name,
-    phone: data!.phone,
+    email: data.email,
+    full_name: data.full_name,
+    phone: data.phone,
     customers: cust,
   };
 }
@@ -86,7 +93,10 @@ export async function fetchSubscription(): Promise<SubscriptionRow | null> {
     .eq("id", (await supabase.auth.getUser()).data.user?.id)
     .maybeSingle();
   if (profErr) throw profErr;
-  const customerId = (prof as any)?.customers?.[0]?.id;
+  // PostgREST returns the customers embed as a single object (1:1 via unique
+  // profile_id FK), not an array. Older code used [0] which always returned
+  // undefined and made every customer appear to have no subscription.
+  const customerId = (prof as any)?.customers?.id;
   if (!customerId) return null;
   const { data, error } = await supabase
     .from("subscriptions")
@@ -109,7 +119,7 @@ export async function fetchPayments(limit = 12): Promise<PaymentRow[]> {
     if (msg.includes("0 rows") || msg.includes("no rows")) return [];
     throw profErr;
   }
-  const customerId = (prof as any)?.customers?.[0]?.id;
+  const customerId = (prof as any)?.customers?.id;
   if (!customerId) return [];
   const { data, error } = await supabase
     .from("payments")
